@@ -1,0 +1,12 @@
+[package]
+name = "dooc_embed_typst"
+version = "0.1.0"
+edition = "2024"
+description = "A minimalist, self-contained wrapper for embedding Typst in Rust binaries."
+license = "MIT"
+
+[dependencies]
+chrono = "0.4.42"
+time = "0.3.44"
+typst = "0.14.2"
+typst-pdf = "0.14.2"
