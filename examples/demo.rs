@@ -11,15 +11,13 @@ const FONT_ROBOTO: &[u8] = include_bytes!("assets/fonts/Roboto-Regular.ttf");
 const FONT_MATH: &[u8] = include_bytes!("assets/fonts/NewCMMath-Regular.otf");
 const CUTE_IMAGE_BY_MY_DAUGHTER: &[u8] = include_bytes!("assets/images/cute.png"); // Example
 const TYPST_TEMPLATE: &str = include_str!("assets/templates/demo.typ");
+// NOTE: There is a difference between the main typst source file and any files included with:
+// #include "foo.typ"
+// The main source file is of type &str, while included files are of type &[u8].
+const INCLUDED_TEMPLATE: &[u8] = include_bytes!("assets/templates/hello.typ");
 
 fn main() {
-    // Currently, dooc_embed_typst must have a single string which contains
-    // everything you want to compile into a PDF.
-    //
-    // This means you do not have the ability to #include or #import other
-    // typst files. You must instead concatenate them all manually.
-    //
-    // I recommend using askama.
+    // Bring in your main typst source file like this:
     let my_code = TYPST_TEMPLATE.to_string();
 
     // This is where your sys.inputs go.
@@ -40,13 +38,18 @@ fn main() {
     let mut inputs = HashMap::new();
     inputs.insert("year_drawn".to_string(), Value::Int(2025));
 
-    // You can put images or other files here.
+    // You can put images, .typ files, and other files here.
+    //
+    // If you ever:
+    // #include "foo.typ"
+    // Then you must add it here, as shown.
     //
     // Currently, dooc_embed_typst has no means to support packages or plugins.
     //
     // This can safely be left empty. You will just get a compiler warning.
     let mut files = HashMap::new();
     files.insert("cute.png".to_string(), CUTE_IMAGE_BY_MY_DAUGHTER.to_vec());
+    files.insert("hello.typ".to_string(), INCLUDED_TEMPLATE.to_vec());
 
     // Fonts are baked into the binary at compile time.
     // It doesn't matter what system your users are on, they will have access

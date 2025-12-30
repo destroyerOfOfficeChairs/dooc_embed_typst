@@ -1,6 +1,5 @@
 use chrono::Local;
 use std::collections::HashMap;
-use std::path::PathBuf;
 use typst::Library;
 use typst::LibraryExt;
 use typst::World;
@@ -104,7 +103,18 @@ impl World for DoocWorld {
         if id == self.source.id() {
             Ok(self.source.clone())
         } else {
-            Err(FileError::NotFound(PathBuf::new()))
+            let path = id.vpath().as_rootless_path();
+            let path_str = path.to_string_lossy().to_string();
+
+            if let Some(bytes) = self.files.get(&path_str) {
+                let text = std::str::from_utf8(bytes)
+                    .map_err(|_| FileError::InvalidUtf8)?
+                    .to_string();
+
+                Ok(Source::new(id, text))
+            } else {
+                Err(FileError::NotFound(path.to_path_buf()))
+            }
         }
     }
     fn file(&self, id: FileId) -> Result<Bytes, FileError> {

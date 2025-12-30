@@ -41,11 +41,6 @@ memory safety and easy integration into existing Rust workflows.
 
 ## Limitations
 
-* **Single Source File:** The current `World` implementation only supports a
-single entry point. You cannot use `#include` or `#import` to reference other
-local .typ files. You must concatenate your source code into a single string
-(or use a templating engine like `askama`) before passing it to the compiler.
-
 * **No Package Manager:** This library is "offline-first." It does not support
 Typst's package management system (e.g., `#import "@preview/..."`). If you need
 external packages, you must download the source files manually and concatenate
@@ -81,11 +76,13 @@ cargo run -p dooc_embed_typst --example demo
 
 You should then see an `output.pdf` file in your current directory.
 
-## Version
+## Current Version
 
-0.1.0
+0.1.1
 
 ## Changelog
+
+* **0.1.1:** You can now #include "foo.typ"
 
 * **0.1.0:** Initial commit.
 
